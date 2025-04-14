@@ -1,33 +1,32 @@
-import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
-type Platform = 'twitter' | 'linkedin' | 'facebook' | 'instagram';
-
 export default function SocialPost() {
-  const [content, setContent] = useState('');
-  const [platform, setPlatform] = useState<Platform>('twitter');
-  const [tone, setTone] = useState('professional');
+  const [content, setContent] = useState("");
+  const [platform, setPlatform] = useState("twitter");
+  const [tone, setTone] = useState("professional");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
+  const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
   const generatePost = async () => {
     try {
       setLoading(true);
-      setError('');
-      
+      setError("");
+
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
+
       const platformGuides = {
-        twitter: 'Keep it concise and engaging, use appropriate hashtags',
-        linkedin: 'Professional tone, industry-relevant hashtags, focus on value',
-        facebook: 'Conversational and engaging, can be longer form',
-        instagram: 'Visual description, engaging caption, relevant hashtags'
+        twitter: "Keep it concise and engaging, use appropriate hashtags",
+        linkedin:
+          "Professional tone, industry-relevant hashtags, focus on value",
+        facebook: "Conversational and engaging, can be longer form",
+        instagram: "Visual description, engaging caption, relevant hashtags",
       };
-      
+
       const prompt = `Convert the following content into a ${tone} social media post for ${platform}.
         Content: "${content}"
         
@@ -38,14 +37,14 @@ export default function SocialPost() {
         - Make it engaging and shareable
         
         Format the response with the post content first, followed by hashtags on a new line.`;
-      
+
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
+
       setResult(text);
     } catch (err) {
-      setError('Failed to generate social post. Please try again.');
+      setError("Failed to generate social post. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -58,9 +57,8 @@ export default function SocialPost() {
         <h2 className="text-2xl font-bold text-white mb-6">
           Social Post Generator
         </h2>
-        
+
         <div className="space-y-6">
-          {/* Content Input */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Content
@@ -74,7 +72,6 @@ export default function SocialPost() {
             />
           </div>
 
-          {/* Platform and Tone Selection */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -82,7 +79,7 @@ export default function SocialPost() {
               </label>
               <select
                 value={platform}
-                onChange={(e) => setPlatform(e.target.value as Platform)}
+                onChange={(e) => setPlatform(e.target.value)}
                 className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="twitter">Twitter</option>
@@ -109,7 +106,6 @@ export default function SocialPost() {
             </div>
           </div>
 
-          {/* Generate Post Button */}
           <button
             onClick={generatePost}
             disabled={loading || !content}
@@ -121,32 +117,28 @@ export default function SocialPost() {
                 Generating...
               </span>
             ) : (
-              'Generate Social Post'
+              "Generate Social Post"
             )}
           </button>
         </div>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-8">
           {error}
         </div>
       )}
 
-      {/* Result Display */}
       {result && (
         <div className="bg-gray-900 rounded-xl shadow-lg p-6 text-white">
-          <h3 className="text-xl font-semibold mb-4">
-            Generated Social Post
-          </h3>
+          <h3 className="text-xl font-semibold mb-4">Generated Social Post</h3>
           <div
             className="p-6 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors"
             onClick={() => navigator.clipboard.writeText(result)}
             title="Click to copy"
           >
             <div className="prose max-w-none text-gray-300">
-              {result.split('\n').map((line, index) => (
+              {result.split("\n").map((line, index) => (
                 <p key={index} className="mb-4">
                   {line}
                 </p>

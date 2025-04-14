@@ -1,13 +1,7 @@
-import React from 'react';
-import { Star, MapPin, Clock, IndianRupee } from 'lucide-react';
-import { Professional } from '../types';
+import React from "react";
+import { Star, MapPin, Clock, IndianRupee } from "lucide-react";
 
-interface ProfessionalProfileProps {
-  professional: Professional;
-  onBook: () => void;
-}
-
-export default function ProfessionalProfile({ professional, onBook }: ProfessionalProfileProps) {
+export default function ProfessionalProfile({ professional, onBook }) {
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="relative h-64">
@@ -21,7 +15,9 @@ export default function ProfessionalProfile({ professional, onBook }: Profession
       <div className="p-6">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{professional.name}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {professional.name}
+            </h1>
             <p className="text-indigo-600 font-medium mt-1 capitalize">
               {professional.profession}
             </p>
@@ -35,7 +31,9 @@ export default function ProfessionalProfile({ professional, onBook }: Profession
         <div className="mt-6 space-y-4">
           <div className="flex items-center gap-2 text-gray-600">
             <MapPin className="w-5 h-5" />
-            <span>{professional.location} - {professional.pincode}</span>
+            <span>
+              {professional.location} - {professional.pincode}
+            </span>
           </div>
           <div className="flex items-center gap-2 text-gray-600">
             <Clock className="w-5 h-5" />
@@ -62,7 +60,7 @@ export default function ProfessionalProfile({ professional, onBook }: Profession
         <div className="mt-8">
           <h2 className="text-lg font-semibold mb-4">Reviews</h2>
           <div className="space-y-4">
-            {professional.reviews.map((review) => (
+            {professional.reviews?.map((review) => (
               <div key={review.id} className="border-b pb-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-medium">{review.userName}</span>

@@ -1,40 +1,47 @@
-import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
-export default function BlogTitle() {
-  const [topic, setTopic] = useState('');
-  const [style, setStyle] = useState('engaging');
+export default function VideoTitle() {
+  const [content, setContent] = useState("");
+  const [style, setStyle] = useState("engaging");
   const [loading, setLoading] = useState(false);
-  const [titles, setTitles] = useState<string[]>([]);
-  const [error, setError] = useState('');
+  const [titles, setTitles] = useState([]);
+  const [error, setError] = useState("");
 
   const generateTitles = async () => {
     try {
       setLoading(true);
-      setError('');
+      setError("");
 
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-      const prompt = `Generate 5 ${style} blog titles for the following topic: "${topic}".
-        Make them attention-grabbing and SEO-friendly.
+      const prompt = `Generate 5 ${style} video titles for the following content:
+        "${content}"
+        
+        Guidelines:
+        - Make them attention-grabbing
+        - Optimize for search (SEO-friendly)
+        - Keep them concise but descriptive
+        - Include numbers or power words where appropriate
+        - Make them clickable but not clickbait
+        
         Format the response as a numbered list.`;
 
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
 
-      // Split the text into an array of titles
       const titleList = text
-        .split('\n')
-        .filter(line => line.trim().length > 0)
-        .map(line => line.replace(/^\d+\.\s*/, '').trim());
+        .split("\n")
+        .filter((line) => line.trim().length > 0)
+        .map((line) => line.replace(/^\d+\.\s*/, "").trim());
 
       setTitles(titleList);
     } catch (err) {
-      setError('Failed to generate titles. Please try again.');
+      setError("Failed to generate video titles. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -42,23 +49,23 @@ export default function BlogTitle() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="bg-gray-900 rounded-xl shadow-lg p-6 mb-8">
+    <div className="max-w-4xl mx-auto bg-gray-900 text-white p-6 rounded-xl shadow-lg">
+      <div className="bg-gray-800 rounded-xl shadow-lg p-6 mb-8">
         <h2 className="text-2xl font-bold text-white mb-6">
-          Blog Title Generator
+          Video Title Generator
         </h2>
 
         <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Blog Topic
+              Video Content
             </label>
-            <input
-              type="text"
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              placeholder="Enter your blog topic"
-              className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Describe your video content"
+              rows={4}
+              className="w-full px-4 py-2 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 bg-gray-800 text-white placeholder-gray-400"
             />
           </div>
 
@@ -69,19 +76,19 @@ export default function BlogTitle() {
             <select
               value={style}
               onChange={(e) => setStyle(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-4 py-2 rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 bg-gray-800 text-white"
             >
               <option value="engaging">Engaging</option>
-              <option value="professional">Professional</option>
-              <option value="creative">Creative</option>
-              <option value="listicle">Listicle</option>
-              <option value="how-to">How-to</option>
+              <option value="educational">Educational</option>
+              <option value="entertaining">Entertaining</option>
+              <option value="tutorial">Tutorial</option>
+              <option value="vlog">Vlog</option>
             </select>
           </div>
 
           <button
             onClick={generateTitles}
-            disabled={loading || !topic}
+            disabled={loading || !content}
             className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
@@ -90,7 +97,7 @@ export default function BlogTitle() {
                 Generating...
               </span>
             ) : (
-              'Generate Titles'
+              "Generate Titles"
             )}
           </button>
         </div>
@@ -103,19 +110,19 @@ export default function BlogTitle() {
       )}
 
       {titles.length > 0 && (
-        <div className="bg-gray-900 rounded-xl shadow-lg p-6">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-6">
           <h3 className="text-xl font-semibold text-white mb-4">
-            Generated Titles
+            Generated Video Titles
           </h3>
           <div className="space-y-4">
             {titles.map((title, index) => (
               <div
                 key={index}
-                className="p-4 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
+                className="p-4 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
                 onClick={() => navigator.clipboard.writeText(title)}
                 title="Click to copy"
               >
-                <p className="font-medium">{title}</p>
+                <p className="text-gray-300 font-medium">{title}</p>
               </div>
             ))}
           </div>

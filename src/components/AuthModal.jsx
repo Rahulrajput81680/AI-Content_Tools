@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
-import { useAuthStore } from '../store/authStore';
+import React, { useState } from "react";
+import { X } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
 
-interface AuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose }) {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
   });
 
   const { login, register } = useAuthStore();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
       } else {
-        await register(formData.name, formData.email, formData.password, formData.phone);
+        await register(
+          formData.name,
+          formData.email,
+          formData.password,
+          formData.phone
+        );
       }
       onClose();
     } catch (error) {
-      console.error('Auth error:', error);
+      console.error("Auth error:", error);
     }
   };
 
@@ -45,7 +45,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         </button>
 
         <h2 className="text-2xl font-bold mb-6">
-          {isLogin ? 'Login' : 'Create Account'}
+          {isLogin ? "Login" : "Create Account"}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -57,7 +57,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-600"
                 required
               />
@@ -71,7 +73,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <input
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-600"
               required
             />
@@ -84,7 +88,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <input
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-600"
               required
             />
@@ -98,7 +104,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               <input
                 type="tel"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
                 className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-600"
                 required
               />
@@ -109,17 +117,17 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            {isLogin ? 'Login' : 'Register'}
+            {isLogin ? "Login" : "Register"}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          {isLogin ? "Don't have an account? " : 'Already have an account? '}
+          {isLogin ? "Don't have an account? " : "Already have an account? "}
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-indigo-600 hover:text-indigo-700 font-medium"
           >
-            {isLogin ? 'Register' : 'Login'}
+            {isLogin ? "Register" : "Login"}
           </button>
         </p>
       </div>

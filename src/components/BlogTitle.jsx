@@ -1,36 +1,39 @@
-import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
-export default function BlogContent() {
-  const [topic, setTopic] = useState('');
-  const [keywords, setKeywords] = useState('');
-  const [tone, setTone] = useState('professional');
+export default function BlogTitle() {
+  const [topic, setTopic] = useState("");
+  const [style, setStyle] = useState("engaging");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
+  const [titles, setTitles] = useState([]);
+  const [error, setError] = useState("");
 
-  const generateContent = async () => {
+  const generateTitles = async () => {
     try {
       setLoading(true);
-      setError('');
-      
+      setError("");
+
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
-      const prompt = `Write a blog post about "${topic}". 
-        Include these keywords: ${keywords}.
-        Use a ${tone} tone.
-        Format the content with proper headings, paragraphs, and make it engaging.`;
-      
+
+      const prompt = `Generate 5 ${style} blog titles for the following topic: "${topic}".
+        Make them attention-grabbing and SEO-friendly.
+        Format the response as a numbered list.`;
+
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
-      setResult(text);
+
+      const titleList = text
+        .split("\n")
+        .filter((line) => line.trim().length > 0)
+        .map((line) => line.replace(/^\d+\.\s*/, "").trim());
+
+      setTitles(titleList);
     } catch (err) {
-      setError('Failed to generate content. Please try again.');
+      setError("Failed to generate titles. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -41,11 +44,10 @@ export default function BlogContent() {
     <div className="max-w-4xl mx-auto">
       <div className="bg-gray-900 rounded-xl shadow-lg p-6 mb-8">
         <h2 className="text-2xl font-bold text-white mb-6">
-          Blog Content Generator
+          Blog Title Generator
         </h2>
-        
+
         <div className="space-y-6">
-          {/* Blog Topic Input */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
               Blog Topic
@@ -59,40 +61,25 @@ export default function BlogContent() {
             />
           </div>
 
-          {/* Keywords Input */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Keywords (comma-separated)
-            </label>
-            <input
-              type="text"
-              value={keywords}
-              onChange={(e) => setKeywords(e.target.value)}
-              placeholder="Enter keywords"
-              className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          {/* Tone Dropdown */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Tone
+              Title Style
             </label>
             <select
-              value={tone}
-              onChange={(e) => setTone(e.target.value)}
+              value={style}
+              onChange={(e) => setStyle(e.target.value)}
               className="w-full px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
+              <option value="engaging">Engaging</option>
               <option value="professional">Professional</option>
-              <option value="casual">Casual</option>
-              <option value="formal">Formal</option>
-              <option value="friendly">Friendly</option>
+              <option value="creative">Creative</option>
+              <option value="listicle">Listicle</option>
+              <option value="how-to">How-to</option>
             </select>
           </div>
 
-          {/* Generate Button */}
           <button
-            onClick={generateContent}
+            onClick={generateTitles}
             disabled={loading || !topic}
             className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -102,32 +89,38 @@ export default function BlogContent() {
                 Generating...
               </span>
             ) : (
-              'Generate Content'
+              "Generate Titles"
             )}
           </button>
         </div>
       </div>
 
-      {/* Error Message */}
       {error && (
         <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-8">
           {error}
         </div>
       )}
 
-      {/* Generated Content Display */}
-      {result && (
-        <div className="bg-gray-900 rounded-xl shadow-lg p-6 text-white">
-          <h3 className="text-xl font-semibold mb-4">
-            Generated Content
+      {titles.length > 0 && (
+        <div className="bg-gray-900 rounded-xl shadow-lg p-6">
+          <h3 className="text-xl font-semibold text-white mb-4">
+            Generated Titles
           </h3>
-          <div className="prose max-w-none text-gray-300">
-            {result.split('\n').map((line, index) => (
-              <p key={index} className="mb-4">
-                {line}
-              </p>
+          <div className="space-y-4">
+            {titles.map((title, index) => (
+              <div
+                key={index}
+                className="p-4 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"
+                onClick={() => navigator.clipboard.writeText(title)}
+                title="Click to copy"
+              >
+                <p className="font-medium">{title}</p>
+              </div>
             ))}
           </div>
+          <p className="text-sm text-gray-400 mt-4">
+            Click on any title to copy it to your clipboard
+          </p>
         </div>
       )}
     </div>

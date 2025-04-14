@@ -1,21 +1,19 @@
-import React from 'react';
-import { Search, MapPin } from 'lucide-react';
-import { Profession } from '../types';
-
-interface SearchFiltersProps {
-  selectedProfession: Profession | '';
-  pincode: string;
-  onProfessionChange: (profession: Profession | '') => void;
-  onPincodeChange: (pincode: string) => void;
-}
+import React from "react";
+import { Search, MapPin } from "lucide-react";
 
 export default function SearchFilters({
   selectedProfession,
   pincode,
   onProfessionChange,
   onPincodeChange,
-}: SearchFiltersProps) {
-  const professions: Profession[] = ['carpenter', 'electrician', 'plumber', 'painter', 'mason'];
+}) {
+  const professions = [
+    "carpenter",
+    "electrician",
+    "plumber",
+    "painter",
+    "mason",
+  ];
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md">
@@ -26,12 +24,16 @@ export default function SearchFilters({
           </label>
           <select
             value={selectedProfession}
-            onChange={(e) => onProfessionChange(e.target.value as Profession)}
+            onChange={(e) => onProfessionChange(e.target.value)}
             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600"
           >
             <option value="">All Professionals</option>
             {professions.map((profession) => (
-              <option key={profession} value={profession} className="capitalize">
+              <option
+                key={profession}
+                value={profession}
+                className="capitalize"
+              >
                 {profession}
               </option>
             ))}

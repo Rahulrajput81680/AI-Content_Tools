@@ -1,29 +1,22 @@
-import React, { useState } from 'react';
-import { X, Calendar, Clock } from 'lucide-react';
-import { format } from 'date-fns';
-import { Professional } from '../types';
-import { useAuthStore } from '../store/authStore';
+import React, { useState } from "react";
+import { X, Calendar, Clock } from "lucide-react";
+import { format } from "date-fns";
+import { useAuthStore } from "../store/authStore";
 
-interface BookingModalProps {
-  professional: Professional;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export default function BookingModal({ professional, isOpen, onClose }: BookingModalProps) {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+export default function BookingModal({ professional, isOpen, onClose }) {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const { isAuthenticated, user } = useAuthStore();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      alert('Please login to book a service');
+      alert("Please login to book a service");
       return;
     }
 
     // Simulate booking API call
-    console.log('Booking:', {
+    console.log("Booking:", {
       professionalId: professional.id,
       userId: user?.id,
       date: selectedDate,
@@ -64,7 +57,7 @@ export default function BookingModal({ professional, isOpen, onClose }: BookingM
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                min={format(new Date(), 'yyyy-MM-dd')}
+                min={format(new Date(), "yyyy-MM-dd")}
                 className="w-full pl-10 pr-4 py-2 rounded-lg border focus:ring-2 focus:ring-indigo-600"
                 required
               />
