@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 export default function VideoDescription() {
-  const [content, setContent] = useState('');
-  const [keywords, setKeywords] = useState('');
-  const [platform, setPlatform] = useState('youtube');
+  const [content, setContent] = useState("");
+  const [keywords, setKeywords] = useState("");
+  const [platform, setPlatform] = useState("youtube");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
+  const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
   const generateDescription = async () => {
     try {
       setLoading(true);
-      setError('');
-      
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
+      setError("");
+
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
       const prompt = `Create an engaging video description for ${platform} with the following details:
         Video Content: ${content}
         Keywords: ${keywords}
@@ -31,14 +31,14 @@ export default function VideoDescription() {
         - Format for easy readability
         - Follow ${platform} best practices
         - Include a call-to-action`;
-      
+
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
+
       setResult(text);
     } catch (err) {
-      setError('Failed to generate video description. Please try again.');
+      setError("Failed to generate video description. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -50,7 +50,7 @@ export default function VideoDescription() {
       <h2 className="text-2xl font-bold mb-6 text-white">
         Video Description Generator
       </h2>
-      
+
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -105,15 +105,13 @@ export default function VideoDescription() {
               Generating...
             </span>
           ) : (
-            'Generate Description'
+            "Generate Description"
           )}
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-500 text-white p-4 rounded-lg mt-8">
-          {error}
-        </div>
+        <div className="bg-red-500 text-white p-4 rounded-lg mt-8">{error}</div>
       )}
 
       {result && (
@@ -127,7 +125,7 @@ export default function VideoDescription() {
             title="Click to copy"
           >
             <div className="prose max-w-none text-gray-300">
-              {result.split('\n').map((line, index) => (
+              {result.split("\n").map((line, index) => (
                 <p key={index} className="mb-4">
                   {line}
                 </p>

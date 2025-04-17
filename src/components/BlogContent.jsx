@@ -3,6 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
 // const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
 export default function BlogContent() {
@@ -18,7 +19,7 @@ export default function BlogContent() {
       setLoading(true);
       setError("");
 
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
       const prompt = `Write a blog post about "${topic}". 
         Include these keywords: ${keywords}.

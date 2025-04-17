@@ -16,7 +16,7 @@ export default function BlogTitle() {
       setLoading(true);
       setError("");
 
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
       const prompt = `Generate 5 ${style} blog titles for the following topic: "${topic}".
         Make them attention-grabbing and SEO-friendly.

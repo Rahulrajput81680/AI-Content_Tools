@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 export default function JobDescription() {
-  const [title, setTitle] = useState('');
-  const [requirements, setRequirements] = useState('');
-  const [responsibilities, setResponsibilities] = useState('');
-  const [company, setCompany] = useState('');
+  const [title, setTitle] = useState("");
+  const [requirements, setRequirements] = useState("");
+  const [responsibilities, setResponsibilities] = useState("");
+  const [company, setCompany] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
+  const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
   const generateDescription = async () => {
     try {
       setLoading(true);
-      setError('');
-      
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
+      setError("");
+
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
       const prompt = `Create a professional job description for the following position:
         Job Title: ${title}
         Company: ${company}
@@ -34,14 +34,14 @@ export default function JobDescription() {
         - Use professional but approachable language
         - Format for easy readability
         - Include a compelling call-to-action for applications`;
-      
+
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
+
       setResult(text);
     } catch (err) {
-      setError('Failed to generate job description. Please try again.');
+      setError("Failed to generate job description. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -54,7 +54,7 @@ export default function JobDescription() {
         <h2 className="text-2xl font-bold text-white mb-6">
           Job Description Generator
         </h2>
-        
+
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -120,7 +120,7 @@ export default function JobDescription() {
                 Generating...
               </span>
             ) : (
-              'Generate Job Description'
+              "Generate Job Description"
             )}
           </button>
         </div>
@@ -143,7 +143,7 @@ export default function JobDescription() {
             title="Click to copy"
           >
             <div className="prose max-w-none text-gray-300">
-              {result.split('\n').map((line, index) => (
+              {result.split("\n").map((line, index) => (
                 <p key={index} className="mb-4">
                   {line}
                 </p>

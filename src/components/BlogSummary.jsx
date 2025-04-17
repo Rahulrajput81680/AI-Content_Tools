@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 export default function BlogSummary() {
-  const [content, setContent] = useState('');
-  const [length, setLength] = useState('medium');
+  const [content, setContent] = useState("");
+  const [length, setLength] = useState("medium");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
+  const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
   const generateSummary = async () => {
     try {
       setLoading(true);
-      setError('');
-      
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
+      setError("");
+
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
       const prompt = `Summarize the following blog post in a ${length} length summary:
         "${content}"
         Make the summary engaging and capture the main points.`;
-      
+
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
+
       setResult(text);
     } catch (err) {
-      setError('Failed to generate summary. Please try again.');
+      setError("Failed to generate summary. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -38,10 +38,8 @@ export default function BlogSummary() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="bg-gray-900 rounded-xl shadow-lg p-6 mb-8">
-        <h2 className="text-2xl font-bold text-white mb-6">
-          Blog Summarizer
-        </h2>
-        
+        <h2 className="text-2xl font-bold text-white mb-6">Blog Summarizer</h2>
+
         <div className="space-y-6">
           {/* Blog Content Input */}
           <div>
@@ -85,7 +83,7 @@ export default function BlogSummary() {
                 Generating...
               </span>
             ) : (
-              'Generate Summary'
+              "Generate Summary"
             )}
           </button>
         </div>
@@ -101,11 +99,9 @@ export default function BlogSummary() {
       {/* Result Display */}
       {result && (
         <div className="bg-gray-900 rounded-xl shadow-lg p-6 text-white">
-          <h3 className="text-xl font-semibold mb-4">
-            Generated Summary
-          </h3>
+          <h3 className="text-xl font-semibold mb-4">Generated Summary</h3>
           <div className="prose max-w-none text-gray-300">
-            {result.split('\n').map((line, index) => (
+            {result.split("\n").map((line, index) => (
               <p key={index} className="mb-4">
                 {line}
               </p>

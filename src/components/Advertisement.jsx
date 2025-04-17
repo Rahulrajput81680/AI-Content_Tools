@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from "react";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Loader2 } from "lucide-react";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 export default function Advertisement() {
-  const [product, setProduct] = useState('');
-  const [target, setTarget] = useState('');
-  const [platform, setPlatform] = useState('general');
-  const [tone, setTone] = useState('professional');
+  const [product, setProduct] = useState("");
+  const [target, setTarget] = useState("");
+  const [platform, setPlatform] = useState("general");
+  const [tone, setTone] = useState("professional");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-  const [error, setError] = useState('');
+  const [result, setResult] = useState("");
+  const [error, setError] = useState("");
 
   const generateAd = async () => {
     try {
       setLoading(true);
-      setError('');
-      
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      
+      setError("");
+
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
       const prompt = `Create a compelling advertisement for the following:
         Product/Service: ${product}
         Target Audience: ${target}
@@ -33,14 +33,14 @@ export default function Advertisement() {
         - Highlight key benefits and unique selling points
         - Keep the language persuasive but authentic
         - Format with clear sections (Headline, Body, CTA)`;
-      
+
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
-      
+
       setResult(text);
     } catch (err) {
-      setError('Failed to generate advertisement. Please try again.');
+      setError("Failed to generate advertisement. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -49,10 +49,8 @@ export default function Advertisement() {
 
   return (
     <div className="max-w-4xl mx-auto bg-gray-900 text-white p-6 rounded-xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-6">
-        Advertisement Generator
-      </h2>
-      
+      <h2 className="text-2xl font-bold mb-6">Advertisement Generator</h2>
+
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -127,7 +125,7 @@ export default function Advertisement() {
               Generating...
             </span>
           ) : (
-            'Generate Advertisement'
+            "Generate Advertisement"
           )}
         </button>
       </div>
@@ -149,7 +147,7 @@ export default function Advertisement() {
             title="Click to copy"
           >
             <div className="prose max-w-none text-gray-300">
-              {result.split('\n').map((line, index) => (
+              {result.split("\n").map((line, index) => (
                 <p key={index} className="mb-4">
                   {line}
                 </p>

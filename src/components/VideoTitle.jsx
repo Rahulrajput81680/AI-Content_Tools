@@ -16,7 +16,7 @@ export default function VideoTitle() {
       setLoading(true);
       setError("");
 
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
       const prompt = `Generate 5 ${style} video titles for the following content:
         "${content}"

@@ -17,7 +17,7 @@ export default function SocialPost() {
       setLoading(true);
       setError("");
 
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flasho" });
 
       const platformGuides = {
         twitter: "Keep it concise and engaging, use appropriate hashtags",
